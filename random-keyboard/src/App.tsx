@@ -68,12 +68,9 @@ const App: React.FC = () => {
         return;
       }
 
-      // Start the game on first key press
+      // Start the game on first key press if not started
       if (!hasStarted && keyMap[key]) {
-        setHasStarted(true);
-        setIsKeyboardVisible(false);
-        setIsRunning(true);
-        setTime(0);
+        handleStart();
         setCurrentPhrase(keyMap[key]);
         return;
       }
@@ -87,6 +84,13 @@ const App: React.FC = () => {
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [hasStarted, keyMap]);
+
+  const handleStart = () => {
+    setHasStarted(true);
+    setIsKeyboardVisible(false);
+    setIsRunning(true);
+    setTime(0);
+  };
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -158,7 +162,14 @@ const App: React.FC = () => {
             Time: <span className="font-mono">{formatTime(time)}</span>
           </p>
 
-          {hasStarted && (
+          {!hasStarted ? (
+            <button
+              onClick={handleStart}
+              className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors w-full mb-4"
+            >
+              Start Challenge
+            </button>
+          ) : (
             <button
               onClick={handleShowKeyboard}
               className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors w-full mb-4"
