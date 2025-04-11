@@ -68,13 +68,13 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-black p-4 border-t border-green-600">
+    <div className="fixed bottom-0 left-0 right-0 bg-amber-50 p-4 border-t-4 border-amber-800 shadow-lg">
       <div className="max-w-4xl mx-auto">
         {/* Progress bar */}
         {hasStarted && (
-          <div className="h-1 bg-black mb-4 overflow-hidden border border-green-800">
+          <div className="h-2 bg-amber-100 mb-4 overflow-hidden border-2 border-amber-700">
             <div
-              className="h-full bg-green-500 transition-all duration-100 ease-linear"
+              className="h-full bg-amber-800 transition-all duration-100 ease-linear"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -85,13 +85,13 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
           {keys.slice(0, 10).map((key, index) => (
             <button
               key={index}
-              className="flex-1 max-w-[40px] bg-black text-green-400 p-2 m-1 border border-green-800 hover:bg-green-900 transition-colors"
+              className="flex-1 max-w-[40px] bg-amber-50 text-amber-900 p-2 m-1 border-2 border-amber-700 hover:bg-amber-200 transition-colors"
               onClick={() => onKeyPress(key)}
             >
-              <div className="text-xs text-green-600">
+              <div className="text-xs text-amber-600">
                 {AZERTY_LAYOUT[index]}
               </div>
-              <div className="text-lg">{key}</div>
+              <div className="text-lg font-bold">{key}</div>
             </button>
           ))}
         </div>
@@ -100,13 +100,13 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
           {keys.slice(10, 20).map((key, index) => (
             <button
               key={index + 10}
-              className="flex-1 max-w-[40px] bg-black text-green-400 p-2 m-1 border border-green-800 hover:bg-green-900 transition-colors"
+              className="flex-1 max-w-[40px] bg-amber-50 text-amber-900 p-2 m-1 border-2 border-amber-700 hover:bg-amber-200 transition-colors"
               onClick={() => onKeyPress(key)}
             >
-              <div className="text-xs text-green-600">
+              <div className="text-xs text-amber-600">
                 {AZERTY_LAYOUT[index + 10]}
               </div>
-              <div className="text-lg">{key}</div>
+              <div className="text-lg font-bold">{key}</div>
             </button>
           ))}
         </div>
@@ -115,13 +115,13 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
           {keys.slice(20).map((key, index) => (
             <button
               key={index + 20}
-              className="flex-1 max-w-[40px] bg-black text-green-400 p-2 m-1 border border-green-800 hover:bg-green-900 transition-colors"
+              className="flex-1 max-w-[40px] bg-amber-50 text-amber-900 p-2 m-1 border-2 border-amber-700 hover:bg-amber-200 transition-colors"
               onClick={() => onKeyPress(key)}
             >
-              <div className="text-xs text-green-600">
+              <div className="text-xs text-amber-600">
                 {AZERTY_LAYOUT[index + 20]}
               </div>
-              <div className="text-lg">{key}</div>
+              <div className="text-lg font-bold">{key}</div>
             </button>
           ))}
         </div>

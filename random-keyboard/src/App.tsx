@@ -170,35 +170,39 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-green-500 p-8 font-mono">
+    <div className="min-h-screen bg-amber-50 p-8 font-serif">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-8 text-green-400">
+        <h1 className="text-4xl font-bold text-center mb-8 text-amber-900">
           Random Keyboard Challenge
         </h1>
 
-        <div className="bg-black p-6 border border-green-600 mb-6">
+        <div className="bg-amber-50 p-6 border-4 border-amber-800 mb-6 shadow-lg">
           <div className="mb-4">
-            <p className="text-xl mb-2 text-green-400">{">"} Target Phrase:</p>
-            <div className="text-xl tracking-wider bg-black p-2 border border-green-800">
+            <p className="text-xl mb-2 text-amber-900 font-bold">
+              Target Phrase:
+            </p>
+            <div className="text-xl tracking-wider bg-amber-50 p-4 border-2 border-amber-700">
               {targetPhrase}
             </div>
           </div>
           <div className="mb-4">
-            <p className="text-xl mb-2 text-green-400">{">"} Current Phrase:</p>
-            <div className="text-xl tracking-wider bg-black p-2 border border-green-800">
+            <p className="text-xl mb-2 text-amber-900 font-bold">
+              Current Phrase:
+            </p>
+            <div className="text-xl tracking-wider bg-amber-50 p-4 border-2 border-amber-700">
               {currentPhrase}
               <span
-                className={`inline-block w-2 h-6 bg-green-500 align-middle ${
+                className={`inline-block w-2 h-6 bg-amber-900 align-middle ${
                   showCursor ? "opacity-100" : "opacity-0"
                 }`}
               ></span>
             </div>
           </div>
           <div className="mb-4">
-            <p className="text-xl mb-2 text-green-400">{">"} Time:</p>
+            <p className="text-xl mb-2 text-amber-900 font-bold">Time:</p>
             <div
               ref={timerRef}
-              className="text-5xl font-bold text-green-400 bg-black p-6 text-center border border-green-600"
+              className="text-5xl font-bold text-amber-900 bg-amber-50 p-6 text-center border-4 border-amber-800"
             >
               <span className="tracking-wider">{formatTime(time)}</span>
             </div>
@@ -207,21 +211,21 @@ const App: React.FC = () => {
           {!hasStarted ? (
             <button
               onClick={handleStart}
-              className="w-full mb-4 px-6 py-3 bg-black text-green-400 border border-green-700 hover:bg-green-900 transition-colors"
+              className="w-full mb-4 px-6 py-3 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors font-bold"
             >
-              {">"} Start Challenge
+              Start Challenge
             </button>
           ) : (
             <button
               onClick={handleShowKeyboard}
-              className={`w-full mb-4 px-6 py-3 border transition-colors ${
+              className={`w-full mb-4 px-6 py-3 border-2 transition-colors font-bold ${
                 isKeyboardVisible
-                  ? "bg-black text-gray-500 cursor-not-allowed border-gray-700"
-                  : "bg-black text-green-400 hover:bg-green-900 border-green-700"
+                  ? "bg-amber-200 text-amber-600 cursor-not-allowed border-amber-400"
+                  : "bg-amber-800 text-amber-50 hover:bg-amber-900 border-amber-900"
               }`}
               disabled={isKeyboardVisible}
             >
-              {">"} Show Keyboard (+10s penalty)
+              Show Keyboard (+10s penalty)
             </button>
           )}
         </div>
