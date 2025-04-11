@@ -32,6 +32,19 @@ const AZERTY_LAYOUT = [
   "n",
 ];
 
+const KONAMI_CODE = [
+  "ArrowUp",
+  "ArrowUp",
+  "ArrowDown",
+  "ArrowDown",
+  "ArrowLeft",
+  "ArrowRight",
+  "ArrowLeft",
+  "ArrowRight",
+  "b",
+  "a",
+];
+
 const App: React.FC = () => {
   const [targetPhrase] = useState(
     "The quick brown fox jumps over the lazy dog"
@@ -47,6 +60,7 @@ const App: React.FC = () => {
   const [showCursor, setShowCursor] = useState(true);
   const [showPlusTen, setShowPlusTen] = useState(false);
   const [timerPosition, setTimerPosition] = useState({ x: 0, y: 0 });
+  const [konamiSequence, setKonamiSequence] = useState<string[]>([]);
   const timerRef = React.useRef<HTMLDivElement>(null);
 
   // Blink cursor effect
@@ -83,6 +97,23 @@ const App: React.FC = () => {
     const handleKeyPress = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase();
 
+      // Check for Konami code
+      const newSequence = [...konamiSequence, event.key];
+      setKonamiSequence(newSequence.slice(-KONAMI_CODE.length));
+
+      if (newSequence.join(",") === KONAMI_CODE.join(",")) {
+        // Revert to standard AZERTY mapping
+        const standardKeyMap: Record<string, string> = {};
+        AZERTY_LAYOUT.forEach((key, index) => {
+          standardKeyMap[key] = key;
+        });
+        setKeyMap(standardKeyMap);
+        setShuffledKeys(AZERTY_LAYOUT);
+        setInitialShuffledKeys(AZERTY_LAYOUT);
+        setKonamiSequence([]);
+        return;
+      }
+
       // Handle backspace
       if (event.key === "Backspace") {
         setCurrentPhrase((prev) => prev.slice(0, -1));
@@ -110,7 +141,7 @@ const App: React.FC = () => {
 
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [hasStarted, keyMap]);
+  }, [hasStarted, keyMap, konamiSequence]);
 
   const handleStart = () => {
     setHasStarted(true);
