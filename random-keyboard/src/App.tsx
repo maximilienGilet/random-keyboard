@@ -46,6 +46,8 @@ const App: React.FC = () => {
   const [initialShuffledKeys, setInitialShuffledKeys] = useState<string[]>([]);
   const [showCursor, setShowCursor] = useState(true);
   const [showPlusTen, setShowPlusTen] = useState(false);
+  const [timerPosition, setTimerPosition] = useState({ x: 0, y: 0 });
+  const timerRef = React.useRef<HTMLDivElement>(null);
 
   // Blink cursor effect
   useEffect(() => {
@@ -129,6 +131,13 @@ const App: React.FC = () => {
 
   const handleShowKeyboard = () => {
     if (hasStarted) {
+      if (timerRef.current) {
+        const rect = timerRef.current.getBoundingClientRect();
+        setTimerPosition({
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+        });
+      }
       setIsKeyboardVisible(true);
       setShuffledKeys(initialShuffledKeys);
       setShowPlusTen(true);
@@ -187,7 +196,10 @@ const App: React.FC = () => {
           </div>
           <div className="mb-4">
             <p className="text-xl mb-2">Time:</p>
-            <div className="font-mono text-5xl font-bold text-blue-600 bg-gray-50 p-6 rounded-lg text-center shadow-inner border-2 border-blue-100">
+            <div
+              ref={timerRef}
+              className="font-mono text-5xl font-bold text-blue-600 bg-gray-50 p-6 rounded-lg text-center shadow-inner border-2 border-blue-100"
+            >
               <span className="tracking-wider">{formatTime(time)}</span>
             </div>
           </div>
@@ -221,7 +233,10 @@ const App: React.FC = () => {
           hasStarted={hasStarted}
         />
 
-        <PlusTenAnimation isVisible={showPlusTen} />
+        <PlusTenAnimation
+          isVisible={showPlusTen}
+          startPosition={timerPosition}
+        />
       </div>
     </div>
   );

@@ -2,20 +2,27 @@ import React, { useEffect, useState } from "react";
 
 interface PlusTenAnimationProps {
   isVisible: boolean;
+  startPosition: { x: number; y: number };
 }
 
-const PlusTenAnimation: React.FC<PlusTenAnimationProps> = ({ isVisible }) => {
+const PlusTenAnimation: React.FC<PlusTenAnimationProps> = ({
+  isVisible,
+  startPosition,
+}) => {
   const [position, setPosition] = useState(0);
   const [opacity, setOpacity] = useState(1);
+  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     if (isVisible) {
       setPosition(0);
       setOpacity(1);
+      setScale(1);
 
       const animation = setInterval(() => {
         setPosition((prev) => prev + 1);
         setOpacity((prev) => Math.max(0, prev - 0.02));
+        setScale((prev) => Math.min(1.3, prev + 0.002));
       }, 16); // ~60fps
 
       return () => clearInterval(animation);
@@ -26,11 +33,15 @@ const PlusTenAnimation: React.FC<PlusTenAnimationProps> = ({ isVisible }) => {
 
   return (
     <div
-      className="fixed left-1/2 transform -translate-x-1/2 text-2xl font-bold text-red-500"
+      className="fixed text-5xl font-extrabold text-red-500"
       style={{
-        bottom: `${50 + position}px`,
+        left: `${startPosition.x}px`,
+        top: `${startPosition.y - position}px`,
         opacity: opacity,
+        transform: `scale(${scale})`,
         transition: "none",
+        textShadow: "0 0 15px rgba(255, 0, 0, 0.7)",
+        WebkitTextStroke: "1.5px white",
       }}
     >
       +10
