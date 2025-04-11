@@ -11,6 +11,7 @@ const App: React.FC = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [shuffledKeys, setShuffledKeys] = useState<string[]>([]);
   const [hasStarted, setHasStarted] = useState(false);
+  const [keyMap, setKeyMap] = useState<Record<string, string>>({});
 
   const shuffleKeys = () => {
     const keys = "abcdefghijklmnopqrstuvwxyz".split("");
@@ -22,8 +23,31 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    setShuffledKeys(shuffleKeys());
+    const newShuffledKeys = shuffleKeys();
+    setShuffledKeys(newShuffledKeys);
+
+    // Create mapping between physical and virtual keys
+    const newKeyMap: Record<string, string> = {};
+    const physicalKeys = "abcdefghijklmnopqrstuvwxyz".split("");
+    physicalKeys.forEach((key, index) => {
+      newKeyMap[key] = newShuffledKeys[index];
+    });
+    setKeyMap(newKeyMap);
   }, []);
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (!hasStarted) return;
+
+      const key = event.key.toLowerCase();
+      if (keyMap[key]) {
+        setCurrentPhrase((prev) => prev + keyMap[key]);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [hasStarted, keyMap]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -45,7 +69,17 @@ const App: React.FC = () => {
   const handleShowKeyboard = () => {
     if (hasStarted) {
       setIsKeyboardVisible(true);
-      setShuffledKeys(shuffleKeys());
+      const newShuffledKeys = shuffleKeys();
+      setShuffledKeys(newShuffledKeys);
+
+      // Update key mapping
+      const newKeyMap: Record<string, string> = {};
+      const physicalKeys = "abcdefghijklmnopqrstuvwxyz".split("");
+      physicalKeys.forEach((key, index) => {
+        newKeyMap[key] = newShuffledKeys[index];
+      });
+      setKeyMap(newKeyMap);
+
       setTime((prev) => prev + 10); // 10 seconds penalty
       setTimeout(() => {
         setIsKeyboardVisible(false);
