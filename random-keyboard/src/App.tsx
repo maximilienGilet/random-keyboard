@@ -353,7 +353,7 @@ const App: React.FC = () => {
               >
                 Start Challenge
               </button>
-            ) : (
+            ) : !isComplete ? (
               <button
                 onClick={handleShowKeyboard}
                 className={`w-full mb-4 px-6 py-3 border-2 transition-colors font-bold ${
@@ -365,7 +365,7 @@ const App: React.FC = () => {
               >
                 Show Keyboard (+10s penalty)
               </button>
-            )}
+            ) : null}
 
             {isComplete && !showNameInput && (
               <button
