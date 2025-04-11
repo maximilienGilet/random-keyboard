@@ -1,11 +1,35 @@
 import React, { useState, useEffect } from "react";
 import VirtualKeyboard from "./components/VirtualKeyboard";
+import PlusTenAnimation from "./components/PlusTenAnimation";
 
 // AZERTY keyboard layout (first row)
 const AZERTY_LAYOUT = [
-  'a', 'z', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
-  'q', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm',
-  'w', 'x', 'c', 'v', 'b', 'n'
+  "a",
+  "z",
+  "e",
+  "r",
+  "t",
+  "y",
+  "u",
+  "i",
+  "o",
+  "p",
+  "q",
+  "s",
+  "d",
+  "f",
+  "g",
+  "h",
+  "j",
+  "k",
+  "l",
+  "m",
+  "w",
+  "x",
+  "c",
+  "v",
+  "b",
+  "n",
 ];
 
 const App: React.FC = () => {
@@ -21,6 +45,7 @@ const App: React.FC = () => {
   const [keyMap, setKeyMap] = useState<Record<string, string>>({});
   const [initialShuffledKeys, setInitialShuffledKeys] = useState<string[]>([]);
   const [showCursor, setShowCursor] = useState(true);
+  const [showPlusTen, setShowPlusTen] = useState(false);
 
   // Blink cursor effect
   useEffect(() => {
@@ -106,6 +131,7 @@ const App: React.FC = () => {
     if (hasStarted) {
       setIsKeyboardVisible(true);
       setShuffledKeys(initialShuffledKeys);
+      setShowPlusTen(true);
 
       // Reuse the initial key mapping
       const newKeyMap: Record<string, string> = {};
@@ -117,6 +143,7 @@ const App: React.FC = () => {
       setTime((prev) => prev + 10); // 10 seconds penalty
       setTimeout(() => {
         setIsKeyboardVisible(false);
+        setShowPlusTen(false);
       }, 10000);
     }
   };
@@ -172,7 +199,11 @@ const App: React.FC = () => {
           ) : (
             <button
               onClick={handleShowKeyboard}
-              className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors w-full mb-4"
+              className={`px-6 py-3 rounded-lg w-full mb-4 transition-colors ${
+                isKeyboardVisible
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-blue-500 text-white hover:bg-blue-600"
+              }`}
               disabled={isKeyboardVisible}
             >
               Show Keyboard (+10s penalty)
@@ -186,6 +217,8 @@ const App: React.FC = () => {
           shuffledKeys={shuffledKeys}
           hasStarted={hasStarted}
         />
+
+        <PlusTenAnimation isVisible={showPlusTen} />
       </div>
     </div>
   );
