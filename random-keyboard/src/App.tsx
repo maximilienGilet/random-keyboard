@@ -184,6 +184,7 @@ const App: React.FC = () => {
           onKeyPress={handleKeyPress}
           isVisible={isKeyboardVisible}
           shuffledKeys={shuffledKeys}
+          hasStarted={hasStarted}
         />
       </div>
     </div>

@@ -4,6 +4,7 @@ interface VirtualKeyboardProps {
   onKeyPress: (key: string) => void;
   isVisible: boolean;
   shuffledKeys: string[];
+  hasStarted?: boolean;
 }
 
 const AZERTY_LAYOUT = [
@@ -39,18 +40,46 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
   onKeyPress,
   isVisible,
   shuffledKeys,
+  hasStarted,
 }) => {
   const [keys, setKeys] = useState<string[]>([]);
+  const [progress, setProgress] = useState(100);
 
   useEffect(() => {
     setKeys(shuffledKeys);
   }, [shuffledKeys]);
+
+  useEffect(() => {
+    if (isVisible && hasStarted) {
+      setProgress(100);
+      const interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev <= 0) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 0.1; // Decrease by 0.1% every 10ms for smoother animation
+        });
+      }, 10);
+      return () => clearInterval(interval);
+    }
+  }, [isVisible, hasStarted]);
 
   if (!isVisible) return null;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-gray-800 p-4 rounded-t-lg">
       <div className="max-w-4xl mx-auto">
+        {/* Progress bar */}
+        {hasStarted && (
+          <div className="h-1 bg-gray-700 rounded-full mb-4 overflow-hidden">
+            <div
+              className="h-full bg-blue-500 transition-all duration-100 ease-linear"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        )}
+
         {/* First row */}
         <div className="flex justify-center mb-1">
           {keys.slice(0, 10).map((key, index) => (
