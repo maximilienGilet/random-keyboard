@@ -4,7 +4,7 @@ interface VirtualKeyboardProps {
   onKeyPress: (key: string) => void;
   isVisible: boolean;
   shuffledKeys: string[];
-  hasStarted?: boolean;
+  hasStarted: boolean;
 }
 
 const AZERTY_LAYOUT = [
@@ -68,8 +68,8 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-amber-50 p-4 border-t-4 border-amber-800 shadow-lg">
-      <div className="max-w-4xl mx-auto">
+    <div className="bg-amber-50 p-4 border-4 border-amber-800 rounded-lg shadow-lg">
+      <div className="flex flex-col gap-2">
         {/* Progress bar */}
         {hasStarted && (
           <div className="h-2 bg-amber-100 mb-4 overflow-hidden border-2 border-amber-700">
@@ -81,8 +81,8 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
         )}
 
         {/* First row */}
-        <div className="flex justify-center mb-1">
-          {keys.slice(0, 10).map((key, index) => (
+        <div className="flex justify-center gap-1">
+          {shuffledKeys.slice(0, 10).map((key, index) => (
             <button
               key={index}
               className="flex-1 max-w-[40px] bg-amber-50 text-amber-900 p-2 m-1 border-2 border-amber-700 hover:bg-amber-200 transition-colors"
@@ -95,9 +95,10 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
             </button>
           ))}
         </div>
+
         {/* Second row */}
-        <div className="flex justify-center mb-1">
-          {keys.slice(10, 20).map((key, index) => (
+        <div className="flex justify-center gap-1">
+          {shuffledKeys.slice(10, 20).map((key, index) => (
             <button
               key={index + 10}
               className="flex-1 max-w-[40px] bg-amber-50 text-amber-900 p-2 m-1 border-2 border-amber-700 hover:bg-amber-200 transition-colors"
@@ -110,9 +111,10 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
             </button>
           ))}
         </div>
+
         {/* Third row */}
-        <div className="flex justify-center">
-          {keys.slice(20).map((key, index) => (
+        <div className="flex justify-center gap-1">
+          {shuffledKeys.slice(20).map((key, index) => (
             <button
               key={index + 20}
               className="flex-1 max-w-[40px] bg-amber-50 text-amber-900 p-2 m-1 border-2 border-amber-700 hover:bg-amber-200 transition-colors"

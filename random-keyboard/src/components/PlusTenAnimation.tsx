@@ -9,42 +9,39 @@ const PlusTenAnimation: React.FC<PlusTenAnimationProps> = ({
   isVisible,
   startPosition,
 }) => {
-  const [position, setPosition] = useState(0);
+  const [position, setPosition] = useState(startPosition);
   const [opacity, setOpacity] = useState(1);
-  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     if (isVisible) {
-      setPosition(0);
+      setPosition(startPosition);
       setOpacity(1);
-      setScale(1);
 
-      const animation = setInterval(() => {
-        setPosition((prev) => prev + 1);
-        setOpacity((prev) => Math.max(0, prev - 0.02));
-        setScale((prev) => Math.min(1.3, prev + 0.002));
-      }, 16); // ~60fps
+      const interval = setInterval(() => {
+        setPosition((prev) => ({
+          x: prev.x,
+          y: prev.y - 2,
+        }));
+        setOpacity((prev) => prev - 0.02);
+      }, 16);
 
-      return () => clearInterval(animation);
+      return () => clearInterval(interval);
     }
-  }, [isVisible]);
+  }, [isVisible, startPosition]);
 
   if (!isVisible) return null;
 
   return (
     <div
-      className="fixed text-5xl font-extrabold text-green-500"
+      className="fixed text-2xl font-bold text-amber-800"
       style={{
-        left: `${startPosition.x}px`,
-        top: `${startPosition.y - position}px`,
+        left: `${position.x}px`,
+        top: `${position.y}px`,
         opacity: opacity,
-        transform: `scale(${scale})`,
-        transition: "none",
-        textShadow: "0 0 15px rgba(0, 255, 0, 0.7)",
-        WebkitTextStroke: "1.5px black",
+        transform: "translate(-50%, -50%)",
       }}
     >
-      +10
+      +10s
     </div>
   );
 };

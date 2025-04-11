@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import VirtualKeyboard from "./components/VirtualKeyboard";
 import PlusTenAnimation from "./components/PlusTenAnimation";
+import Leaderboard, { Score } from "./components/Leaderboard";
 
 // AZERTY keyboard layout (first row)
 const AZERTY_LAYOUT = [
@@ -61,7 +62,12 @@ const App: React.FC = () => {
   const [showPlusTen, setShowPlusTen] = useState(false);
   const [timerPosition, setTimerPosition] = useState({ x: 0, y: 0 });
   const [konamiSequence, setKonamiSequence] = useState<string[]>([]);
-  const timerRef = React.useRef<HTMLDivElement>(null);
+  const [isComplete, setIsComplete] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(true);
+  const [playerName, setPlayerName] = useState("");
+  const [scores, setScores] = useState<Score[]>([]);
+  const [showNameInput, setShowNameInput] = useState(false);
+  const timerRef = useRef<HTMLDivElement>(null);
 
   // Blink cursor effect
   useEffect(() => {
@@ -93,7 +99,63 @@ const App: React.FC = () => {
     setKeyMap(newKeyMap);
   }, []);
 
+  const handleKeyPress = (key: string) => {
+    if (isComplete) return; // Don't accept input if game is complete
+
+    if (!hasStarted) {
+      setHasStarted(true);
+      setIsKeyboardVisible(false);
+      setIsRunning(true);
+      setCurrentPhrase(key.toUpperCase());
+    } else {
+      // Calculate what the new phrase would be
+      const newPhrase =
+        key === "Backspace"
+          ? currentPhrase.slice(0, -1)
+          : key === " "
+          ? currentPhrase + " "
+          : currentPhrase + key;
+
+      // Update the phrase first
+      setCurrentPhrase(newPhrase);
+
+      // Then check for completion
+      if (newPhrase.toLowerCase() === targetPhrase.toLowerCase()) {
+        setIsComplete(true);
+        setIsRunning(false);
+        setShowNameInput(true);
+      }
+    }
+  };
+
   useEffect(() => {
+    if (isComplete) {
+      // Only prevent game-related keys when game is complete
+      const handleKeyDown = (e: KeyboardEvent) => {
+        // Allow typing in the name input
+        if (e.target instanceof HTMLInputElement) return;
+
+        // Allow navigation keys
+        if (
+          [
+            "Tab",
+            "Enter",
+            "Escape",
+            "ArrowUp",
+            "ArrowDown",
+            "ArrowLeft",
+            "ArrowRight",
+          ].includes(e.key)
+        )
+          return;
+
+        // Prevent all other keys
+        e.preventDefault();
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }
+
     const handleKeyPress = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase();
 
@@ -116,13 +178,25 @@ const App: React.FC = () => {
 
       // Handle backspace
       if (event.key === "Backspace") {
-        setCurrentPhrase((prev) => prev.slice(0, -1));
+        const newPhrase = currentPhrase.slice(0, -1);
+        setCurrentPhrase(newPhrase);
+        if (newPhrase.toLowerCase() === targetPhrase.toLowerCase()) {
+          setIsComplete(true);
+          setIsRunning(false);
+          setShowNameInput(true);
+        }
         return;
       }
 
       // Handle space
       if (event.key === " ") {
-        setCurrentPhrase((prev) => prev + " ");
+        const newPhrase = currentPhrase + " ";
+        setCurrentPhrase(newPhrase);
+        if (newPhrase.toLowerCase() === targetPhrase.toLowerCase()) {
+          setIsComplete(true);
+          setIsRunning(false);
+          setShowNameInput(true);
+        }
         return;
       }
 
@@ -135,18 +209,29 @@ const App: React.FC = () => {
 
       // Continue the game if already started
       if (hasStarted && keyMap[key]) {
-        setCurrentPhrase((prev) => {
-          if (prev.length === 0) {
-            return keyMap[key].toUpperCase();
-          }
-          return prev + keyMap[key];
-        });
+        const newPhrase =
+          currentPhrase.length === 0
+            ? keyMap[key].toUpperCase()
+            : currentPhrase + keyMap[key];
+        setCurrentPhrase(newPhrase);
+        if (newPhrase.toLowerCase() === targetPhrase.toLowerCase()) {
+          setIsComplete(true);
+          setIsRunning(false);
+          setShowNameInput(true);
+        }
       }
     };
 
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [hasStarted, keyMap, konamiSequence]);
+  }, [
+    hasStarted,
+    keyMap,
+    konamiSequence,
+    currentPhrase,
+    targetPhrase,
+    isComplete,
+  ]);
 
   const handleStart = () => {
     setHasStarted(true);
@@ -193,90 +278,197 @@ const App: React.FC = () => {
     }
   };
 
-  const handleKeyPress = (key: string) => {
-    if (hasStarted) {
-      setCurrentPhrase((prev) => prev + key);
-    }
-  };
-
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
+  useEffect(() => {
+    // Load scores from localStorage
+    const savedScores = localStorage.getItem("keyboardScores");
+    if (savedScores) {
+      setScores(JSON.parse(savedScores));
+    }
+  }, []);
+
+  const handleNameSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (playerName.trim()) {
+      const newScore: Score = {
+        name: playerName.trim(),
+        time: time * 1000, // Convert to milliseconds
+        date: new Date().toISOString(),
+      };
+
+      const updatedScores = [...scores, newScore]
+        .sort((a, b) => a.time - b.time)
+        .slice(0, 10); // Keep only top 10 scores
+
+      setScores(updatedScores);
+      localStorage.setItem("keyboardScores", JSON.stringify(updatedScores));
+      setShowNameInput(false);
+      setShowConfetti(false); // Stop confetti after saving score
+    }
+  };
+
+  const handleRestart = () => {
+    setCurrentPhrase("");
+    setTime(0);
+    setIsComplete(false);
+    setShowConfetti(false);
+    setHasStarted(false);
+    setIsKeyboardVisible(true);
+    setPlayerName("");
+    setShowNameInput(false);
+  };
+
   return (
     <div className="min-h-screen bg-amber-50 p-8 font-serif">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-8 text-amber-900">
-          Random Keyboard Challenge
-        </h1>
+      <div className="max-w-6xl mx-auto flex gap-8 relative z-10">
+        <div className="flex-1">
+          <h1 className="text-4xl font-bold text-center mb-8 text-amber-900">
+            Random Keyboard Challenge
+          </h1>
 
-        <div className="bg-amber-50 p-6 border-4 border-amber-800 mb-6 shadow-lg">
-          <div className="mb-4">
-            <p className="text-xl mb-2 text-amber-900 font-bold">
-              Target Phrase:
-            </p>
-            <div className="text-xl tracking-wider bg-amber-50 p-4 border-2 border-amber-700">
-              {targetPhrase}
+          <div className="bg-amber-50 p-6 border-4 border-amber-800 mb-6 shadow-lg">
+            <div className="mb-4">
+              <p className="text-xl mb-2 text-amber-900 font-bold">
+                Target Phrase:
+              </p>
+              <div className="text-xl tracking-wider bg-amber-50 p-4 border-2 border-amber-700">
+                {targetPhrase}
+              </div>
             </div>
-          </div>
-          <div className="mb-4">
-            <p className="text-xl mb-2 text-amber-900 font-bold">
-              Current Phrase:
-            </p>
-            <div className="text-xl tracking-wider bg-amber-50 p-4 border-2 border-amber-700">
-              {currentPhrase}
-              <span
-                className={`inline-block w-2 h-6 bg-amber-900 align-middle ${
-                  showCursor ? "opacity-100" : "opacity-0"
+            <div className="mb-4">
+              <p className="text-xl mb-2 text-amber-900 font-bold">
+                Current Phrase:
+              </p>
+              <div className="text-xl tracking-wider bg-amber-50 p-4 border-2 border-amber-700">
+                {currentPhrase}
+                <span
+                  className={`inline-block w-2 h-6 bg-amber-900 align-middle ${
+                    showCursor ? "opacity-100" : "opacity-0"
+                  }`}
+                ></span>
+              </div>
+            </div>
+            <div className="mb-4">
+              <p className="text-xl mb-2 text-amber-900 font-bold">Time:</p>
+              <div
+                ref={timerRef}
+                className="text-5xl font-bold text-amber-900 bg-amber-50 p-6 text-center border-4 border-amber-800"
+              >
+                <span className="tracking-wider">{formatTime(time)}</span>
+              </div>
+            </div>
+
+            {!hasStarted ? (
+              <button
+                onClick={handleStart}
+                className="w-full mb-4 px-6 py-3 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors font-bold"
+              >
+                Start Challenge
+              </button>
+            ) : (
+              <button
+                onClick={handleShowKeyboard}
+                className={`w-full mb-4 px-6 py-3 border-2 transition-colors font-bold ${
+                  isKeyboardVisible
+                    ? "bg-amber-200 text-amber-600 cursor-not-allowed border-amber-400"
+                    : "bg-amber-800 text-amber-50 hover:bg-amber-900 border-amber-900"
                 }`}
-              ></span>
-            </div>
-          </div>
-          <div className="mb-4">
-            <p className="text-xl mb-2 text-amber-900 font-bold">Time:</p>
-            <div
-              ref={timerRef}
-              className="text-5xl font-bold text-amber-900 bg-amber-50 p-6 text-center border-4 border-amber-800"
-            >
-              <span className="tracking-wider">{formatTime(time)}</span>
-            </div>
+                disabled={isKeyboardVisible}
+              >
+                Show Keyboard (+10s penalty)
+              </button>
+            )}
+
+            {isComplete && !showNameInput && (
+              <button
+                onClick={handleRestart}
+                className="w-full mt-4 px-6 py-3 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors font-bold"
+              >
+                Start New Challenge
+              </button>
+            )}
           </div>
 
-          {!hasStarted ? (
-            <button
-              onClick={handleStart}
-              className="w-full mb-4 px-6 py-3 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors font-bold"
-            >
-              Start Challenge
-            </button>
-          ) : (
-            <button
-              onClick={handleShowKeyboard}
-              className={`w-full mb-4 px-6 py-3 border-2 transition-colors font-bold ${
-                isKeyboardVisible
-                  ? "bg-amber-200 text-amber-600 cursor-not-allowed border-amber-400"
-                  : "bg-amber-800 text-amber-50 hover:bg-amber-900 border-amber-900"
-              }`}
-              disabled={isKeyboardVisible}
-            >
-              Show Keyboard (+10s penalty)
-            </button>
-          )}
+          <VirtualKeyboard
+            onKeyPress={handleKeyPress}
+            isVisible={isKeyboardVisible}
+            shuffledKeys={shuffledKeys}
+            hasStarted={hasStarted}
+          />
         </div>
 
-        <VirtualKeyboard
-          onKeyPress={handleKeyPress}
-          isVisible={isKeyboardVisible}
-          shuffledKeys={shuffledKeys}
-          hasStarted={hasStarted}
-        />
+        <div className="w-80">
+          <Leaderboard scores={scores} />
+        </div>
+      </div>
+
+      {showNameInput && (
+        <div
+          className="modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+        >
+          <div className="modal-content">
+            <h2
+              id="modal-title"
+              className="text-2xl font-bold text-amber-900 mb-4"
+            >
+              Save Your Score
+            </h2>
+            <form onSubmit={handleNameSubmit} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="playerName"
+                  className="block text-amber-900 font-bold mb-2"
+                  id="name-label"
+                >
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  id="playerName"
+                  value={playerName}
+                  onChange={(e) => setPlayerName(e.target.value)}
+                  className="w-full p-2 border-2 border-amber-700 rounded bg-amber-50"
+                  placeholder="Enter your name"
+                  required
+                  aria-required="true"
+                  aria-labelledby="name-label"
+                  autoFocus
+                />
+              </div>
+              <div className="flex justify-end gap-4">
+                <button
+                  type="button"
+                  onClick={() => setShowNameInput(false)}
+                  className="px-4 py-2 border-2 border-amber-700 text-amber-900 hover:bg-amber-100 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors"
+                >
+                  Save Score
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showPlusTen && (
         <PlusTenAnimation
           isVisible={showPlusTen}
           startPosition={timerPosition}
         />
-      </div>
+      )}
     </div>
   );
 };
