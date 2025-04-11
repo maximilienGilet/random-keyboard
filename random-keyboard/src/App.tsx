@@ -241,10 +241,15 @@ const App: React.FC = () => {
           x: rect.left + rect.width / 2,
           y: rect.top + rect.height / 2,
         });
+        console.log("Timer Position:", {
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+        });
       }
       setIsKeyboardVisible(true);
       setShuffledKeys(initialShuffledKeys);
       setShowPlusTen(true);
+      console.log("Show Plus Ten:", true);
 
       // Reuse the initial key mapping
       const newKeyMap: Record<string, string> = {};
@@ -257,6 +262,7 @@ const App: React.FC = () => {
       setTimeout(() => {
         setIsKeyboardVisible(false);
         setShowPlusTen(false);
+        console.log("Show Plus Ten:", false);
       }, 10000);
     }
   };

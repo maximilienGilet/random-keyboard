@@ -13,7 +13,8 @@ const PlusTenAnimation: React.FC<PlusTenAnimationProps> = ({
   const [opacity, setOpacity] = useState(1);
 
   useEffect(() => {
-    if (isVisible) {
+    if (true) {
+      // Temporarily set to true for testing
       setPosition(startPosition);
       setOpacity(1);
 
@@ -27,18 +28,19 @@ const PlusTenAnimation: React.FC<PlusTenAnimationProps> = ({
 
       return () => clearInterval(interval);
     }
-  }, [isVisible, startPosition]);
+  }, [startPosition]);
 
   if (!isVisible) return null;
 
   return (
     <div
-      className="fixed text-2xl font-bold text-amber-800"
+      className="fixed text-4xl font-bold text-red-500"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
         opacity: opacity,
         transform: "translate(-50%, -50%)",
+        zIndex: 1000,
       }}
     >
       +10s
