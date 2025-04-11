@@ -6,6 +6,35 @@ interface VirtualKeyboardProps {
   shuffledKeys: string[];
 }
 
+const AZERTY_LAYOUT = [
+  "a",
+  "z",
+  "e",
+  "r",
+  "t",
+  "y",
+  "u",
+  "i",
+  "o",
+  "p",
+  "q",
+  "s",
+  "d",
+  "f",
+  "g",
+  "h",
+  "j",
+  "k",
+  "l",
+  "m",
+  "w",
+  "x",
+  "c",
+  "v",
+  "b",
+  "n",
+];
+
 const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
   onKeyPress,
   isVisible,
@@ -22,14 +51,48 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-gray-800 p-4 rounded-t-lg">
       <div className="max-w-4xl mx-auto">
-        <div className="grid grid-cols-10 gap-1">
-          {keys.map((key, index) => (
+        {/* First row */}
+        <div className="flex justify-center mb-1">
+          {keys.slice(0, 10).map((key, index) => (
             <button
               key={index}
-              className="bg-gray-700 text-white p-2 rounded hover:bg-gray-600 transition-colors"
+              className="flex-1 max-w-[40px] bg-gray-700 text-white p-2 m-1 rounded hover:bg-gray-600 transition-colors"
               onClick={() => onKeyPress(key)}
             >
-              {key}
+              <div className="text-xs text-gray-400">
+                {AZERTY_LAYOUT[index]}
+              </div>
+              <div className="text-lg">{key}</div>
+            </button>
+          ))}
+        </div>
+        {/* Second row */}
+        <div className="flex justify-center mb-1">
+          {keys.slice(10, 20).map((key, index) => (
+            <button
+              key={index + 10}
+              className="flex-1 max-w-[40px] bg-gray-700 text-white p-2 m-1 rounded hover:bg-gray-600 transition-colors"
+              onClick={() => onKeyPress(key)}
+            >
+              <div className="text-xs text-gray-400">
+                {AZERTY_LAYOUT[index + 10]}
+              </div>
+              <div className="text-lg">{key}</div>
+            </button>
+          ))}
+        </div>
+        {/* Third row */}
+        <div className="flex justify-center">
+          {keys.slice(20).map((key, index) => (
+            <button
+              key={index + 20}
+              className="flex-1 max-w-[40px] bg-gray-700 text-white p-2 m-1 rounded hover:bg-gray-600 transition-colors"
+              onClick={() => onKeyPress(key)}
+            >
+              <div className="text-xs text-gray-400">
+                {AZERTY_LAYOUT[index + 20]}
+              </div>
+              <div className="text-lg">{key}</div>
             </button>
           ))}
         </div>

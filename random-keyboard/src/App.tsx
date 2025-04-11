@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import VirtualKeyboard from "./components/VirtualKeyboard";
 
+// AZERTY keyboard layout (first row)
+const AZERTY_LAYOUT = [
+  'a', 'z', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
+  'q', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm',
+  'w', 'x', 'c', 'v', 'b', 'n'
+];
+
 const App: React.FC = () => {
   const [targetPhrase] = useState(
     "The quick brown fox jumps over the lazy dog"
@@ -12,9 +19,10 @@ const App: React.FC = () => {
   const [shuffledKeys, setShuffledKeys] = useState<string[]>([]);
   const [hasStarted, setHasStarted] = useState(false);
   const [keyMap, setKeyMap] = useState<Record<string, string>>({});
+  const [initialShuffledKeys, setInitialShuffledKeys] = useState<string[]>([]);
 
   const shuffleKeys = () => {
-    const keys = "abcdefghijklmnopqrstuvwxyz".split("");
+    const keys = [...AZERTY_LAYOUT];
     for (let i = keys.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [keys[i], keys[j]] = [keys[j], keys[i]];
@@ -25,11 +33,11 @@ const App: React.FC = () => {
   useEffect(() => {
     const newShuffledKeys = shuffleKeys();
     setShuffledKeys(newShuffledKeys);
+    setInitialShuffledKeys(newShuffledKeys);
 
-    // Create mapping between physical and virtual keys
+    // Create mapping between physical AZERTY keys and virtual keys
     const newKeyMap: Record<string, string> = {};
-    const physicalKeys = "abcdefghijklmnopqrstuvwxyz".split("");
-    physicalKeys.forEach((key, index) => {
+    AZERTY_LAYOUT.forEach((key, index) => {
       newKeyMap[key] = newShuffledKeys[index];
     });
     setKeyMap(newKeyMap);
@@ -69,14 +77,12 @@ const App: React.FC = () => {
   const handleShowKeyboard = () => {
     if (hasStarted) {
       setIsKeyboardVisible(true);
-      const newShuffledKeys = shuffleKeys();
-      setShuffledKeys(newShuffledKeys);
+      setShuffledKeys(initialShuffledKeys);
 
-      // Update key mapping
+      // Reuse the initial key mapping
       const newKeyMap: Record<string, string> = {};
-      const physicalKeys = "abcdefghijklmnopqrstuvwxyz".split("");
-      physicalKeys.forEach((key, index) => {
-        newKeyMap[key] = newShuffledKeys[index];
+      AZERTY_LAYOUT.forEach((key, index) => {
+        newKeyMap[key] = initialShuffledKeys[index];
       });
       setKeyMap(newKeyMap);
 
