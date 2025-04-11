@@ -45,10 +45,20 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (!hasStarted) return;
-
       const key = event.key.toLowerCase();
-      if (keyMap[key]) {
+
+      // Start the game on first key press
+      if (!hasStarted && keyMap[key]) {
+        setHasStarted(true);
+        setIsKeyboardVisible(false);
+        setIsRunning(true);
+        setTime(0);
+        setCurrentPhrase(keyMap[key]);
+        return;
+      }
+
+      // Continue the game if already started
+      if (hasStarted && keyMap[key]) {
         setCurrentPhrase((prev) => prev + keyMap[key]);
       }
     };
@@ -66,13 +76,6 @@ const App: React.FC = () => {
     }
     return () => clearInterval(interval);
   }, [isRunning]);
-
-  const handleStart = () => {
-    setHasStarted(true);
-    setIsKeyboardVisible(false);
-    setIsRunning(true);
-    setTime(0);
-  };
 
   const handleShowKeyboard = () => {
     if (hasStarted) {
@@ -123,14 +126,7 @@ const App: React.FC = () => {
             Time: <span className="font-mono">{formatTime(time)}</span>
           </p>
 
-          {!hasStarted ? (
-            <button
-              onClick={handleStart}
-              className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors w-full mb-4"
-            >
-              Start Challenge
-            </button>
-          ) : (
+          {hasStarted && (
             <button
               onClick={handleShowKeyboard}
               className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors w-full mb-4"
