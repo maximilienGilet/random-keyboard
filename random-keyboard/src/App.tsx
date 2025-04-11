@@ -129,13 +129,18 @@ const App: React.FC = () => {
       // Start the game on first key press if not started
       if (!hasStarted && keyMap[key]) {
         handleStart();
-        setCurrentPhrase(keyMap[key]);
+        setCurrentPhrase(keyMap[key].toUpperCase());
         return;
       }
 
       // Continue the game if already started
       if (hasStarted && keyMap[key]) {
-        setCurrentPhrase((prev) => prev + keyMap[key]);
+        setCurrentPhrase((prev) => {
+          if (prev.length === 0) {
+            return keyMap[key].toUpperCase();
+          }
+          return prev + keyMap[key];
+        });
       }
     };
 
