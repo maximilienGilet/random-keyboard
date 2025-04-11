@@ -398,17 +398,66 @@ const App: React.FC = () => {
           aria-labelledby="modal-title"
         >
           <div className="modal-content">
-            <h2
-              id="modal-title"
-              className="text-2xl font-bold text-amber-900 mb-4"
-            >
-              Save Your Score
-            </h2>
-            <form onSubmit={handleNameSubmit} className="space-y-4">
-              <div>
+            <div className="text-center">
+              <h2
+                id="modal-title"
+                className="text-3xl font-bold text-amber-900 mb-6"
+              >
+                {scores.length === 0 ||
+                time < Math.min(...scores.map((s) => s.time / 1000)) ? (
+                  <>
+                    <div className="relative">
+                      <div className="animate-spin-slow text-6xl mb-4">🏆</div>
+                      <div className="absolute -top-2 -right-2 animate-ping text-2xl">
+                        ✨
+                      </div>
+                      <div
+                        className="absolute -bottom-2 -left-2 animate-ping text-2xl"
+                        style={{ animationDelay: "0.5s" }}
+                      >
+                        ✨
+                      </div>
+                      <div
+                        className="absolute -top-2 -left-2 animate-ping text-2xl"
+                        style={{ animationDelay: "1s" }}
+                      >
+                        ✨
+                      </div>
+                      <div
+                        className="absolute -bottom-2 -right-2 animate-ping text-2xl"
+                        style={{ animationDelay: "1.5s" }}
+                      >
+                        ✨
+                      </div>
+                    </div>
+                    <div className="animate-bounce text-4xl mt-2">
+                      New High Score!
+                    </div>
+                  </>
+                ) : (
+                  "Congratulations! 🎉"
+                )}
+              </h2>
+              <div className="mb-8">
+                <p className="text-amber-700 mb-2 text-xl">Your time:</p>
+                <div className="text-7xl font-bold text-amber-800 mb-4">
+                  {formatTime(time)}
+                </div>
+                {scores.length === 0 ||
+                time < Math.min(...scores.map((s) => s.time / 1000)) ? (
+                  <p className="text-amber-600 animate-pulse text-xl">
+                    You're the fastest! ⚡
+                  </p>
+                ) : (
+                  <p className="text-amber-600 text-xl">Great job!</p>
+                )}
+              </div>
+            </div>
+            <form onSubmit={handleNameSubmit} className="space-y-6">
+              <div className="text-center">
                 <label
                   htmlFor="playerName"
-                  className="block text-amber-900 font-bold mb-2"
+                  className="block text-amber-900 font-bold mb-2 text-xl"
                   id="name-label"
                 >
                   Your Name
@@ -418,7 +467,7 @@ const App: React.FC = () => {
                   id="playerName"
                   value={playerName}
                   onChange={(e) => setPlayerName(e.target.value)}
-                  className="w-full p-2 border-2 border-amber-700 rounded bg-amber-50"
+                  className="w-full max-w-md mx-auto p-3 border-2 border-amber-700 rounded bg-amber-50 text-center text-xl"
                   placeholder="Enter your name"
                   required
                   aria-required="true"
@@ -426,17 +475,17 @@ const App: React.FC = () => {
                   autoFocus
                 />
               </div>
-              <div className="flex justify-end gap-4">
+              <div className="flex justify-center gap-4">
                 <button
                   type="button"
                   onClick={() => setShowNameInput(false)}
-                  className="px-4 py-2 border-2 border-amber-700 text-amber-900 hover:bg-amber-100 transition-colors"
+                  className="px-6 py-2 border-2 border-amber-700 text-amber-900 hover:bg-amber-100 transition-colors text-lg"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors"
+                  className="px-6 py-2 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors text-lg"
                 >
                   Save Score
                 </button>
