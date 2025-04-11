@@ -137,20 +137,23 @@ const App: React.FC = () => {
         </h1>
 
         <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-          <p className="text-xl mb-4">
-            Target Phrase: <span className="font-mono">{targetPhrase}</span>
-          </p>
-          <p className="text-xl mb-4">
-            Current Phrase:
-            <span className="font-mono">
+          <div className="mb-4">
+            <p className="text-xl mb-2">Target Phrase:</p>
+            <div className="font-mono text-xl tracking-wider bg-gray-50 p-2 rounded">
+              {targetPhrase}
+            </div>
+          </div>
+          <div className="mb-4">
+            <p className="text-xl mb-2">Current Phrase:</p>
+            <div className="font-mono text-xl tracking-wider bg-gray-50 p-2 rounded">
               {currentPhrase}
               <span
                 className={`inline-block w-2 h-6 bg-gray-800 align-middle ${
                   showCursor ? "opacity-100" : "opacity-0"
                 }`}
               ></span>
-            </span>
-          </p>
+            </div>
+          </div>
           <p className="text-xl mb-4">
             Time: <span className="font-mono">{formatTime(time)}</span>
           </p>
