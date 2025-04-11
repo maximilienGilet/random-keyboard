@@ -170,35 +170,35 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-black text-green-500 p-8 font-mono">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-8">
+        <h1 className="text-3xl font-bold text-center mb-8 text-green-400">
           Random Keyboard Challenge
         </h1>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
+        <div className="bg-black p-6 border border-green-600 mb-6">
           <div className="mb-4">
-            <p className="text-xl mb-2">Target Phrase:</p>
-            <div className="font-mono text-xl tracking-wider bg-gray-50 p-2 rounded">
+            <p className="text-xl mb-2 text-green-400">{">"} Target Phrase:</p>
+            <div className="text-xl tracking-wider bg-black p-2 border border-green-800">
               {targetPhrase}
             </div>
           </div>
           <div className="mb-4">
-            <p className="text-xl mb-2">Current Phrase:</p>
-            <div className="font-mono text-xl tracking-wider bg-gray-50 p-2 rounded">
+            <p className="text-xl mb-2 text-green-400">{">"} Current Phrase:</p>
+            <div className="text-xl tracking-wider bg-black p-2 border border-green-800">
               {currentPhrase}
               <span
-                className={`inline-block w-2 h-6 bg-gray-800 align-middle ${
+                className={`inline-block w-2 h-6 bg-green-500 align-middle ${
                   showCursor ? "opacity-100" : "opacity-0"
                 }`}
               ></span>
             </div>
           </div>
           <div className="mb-4">
-            <p className="text-xl mb-2">Time:</p>
+            <p className="text-xl mb-2 text-green-400">{">"} Time:</p>
             <div
               ref={timerRef}
-              className="font-mono text-5xl font-bold text-blue-600 bg-gray-50 p-6 rounded-lg text-center shadow-inner border-2 border-blue-100"
+              className="text-5xl font-bold text-green-400 bg-black p-6 text-center border border-green-600"
             >
               <span className="tracking-wider">{formatTime(time)}</span>
             </div>
@@ -207,21 +207,21 @@ const App: React.FC = () => {
           {!hasStarted ? (
             <button
               onClick={handleStart}
-              className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors w-full mb-4"
+              className="w-full mb-4 px-6 py-3 bg-black text-green-400 border border-green-700 hover:bg-green-900 transition-colors"
             >
-              Start Challenge
+              {">"} Start Challenge
             </button>
           ) : (
             <button
               onClick={handleShowKeyboard}
-              className={`px-6 py-3 rounded-lg w-full mb-4 transition-colors ${
+              className={`w-full mb-4 px-6 py-3 border transition-colors ${
                 isKeyboardVisible
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-blue-500 text-white hover:bg-blue-600"
+                  ? "bg-black text-gray-500 cursor-not-allowed border-gray-700"
+                  : "bg-black text-green-400 hover:bg-green-900 border-green-700"
               }`}
               disabled={isKeyboardVisible}
             >
-              Show Keyboard (+10s penalty)
+              {">"} Show Keyboard (+10s penalty)
             </button>
           )}
         </div>
@@ -232,7 +232,6 @@ const App: React.FC = () => {
           shuffledKeys={shuffledKeys}
           hasStarted={hasStarted}
         />
-
         <PlusTenAnimation
           isVisible={showPlusTen}
           startPosition={timerPosition}

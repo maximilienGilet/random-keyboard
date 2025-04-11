@@ -33,15 +33,15 @@ const PlusTenAnimation: React.FC<PlusTenAnimationProps> = ({
 
   return (
     <div
-      className="fixed text-5xl font-extrabold text-red-500"
+      className="fixed text-5xl font-extrabold text-green-500"
       style={{
         left: `${startPosition.x}px`,
         top: `${startPosition.y - position}px`,
         opacity: opacity,
         transform: `scale(${scale})`,
         transition: "none",
-        textShadow: "0 0 15px rgba(255, 0, 0, 0.7)",
-        WebkitTextStroke: "1.5px white",
+        textShadow: "0 0 15px rgba(0, 255, 0, 0.7)",
+        WebkitTextStroke: "1.5px black",
       }}
     >
       +10
