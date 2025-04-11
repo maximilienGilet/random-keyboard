@@ -20,6 +20,15 @@ const App: React.FC = () => {
   const [hasStarted, setHasStarted] = useState(false);
   const [keyMap, setKeyMap] = useState<Record<string, string>>({});
   const [initialShuffledKeys, setInitialShuffledKeys] = useState<string[]>([]);
+  const [showCursor, setShowCursor] = useState(true);
+
+  // Blink cursor effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShowCursor((prev) => !prev);
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
 
   const shuffleKeys = () => {
     const keys = [...AZERTY_LAYOUT];
@@ -132,7 +141,15 @@ const App: React.FC = () => {
             Target Phrase: <span className="font-mono">{targetPhrase}</span>
           </p>
           <p className="text-xl mb-4">
-            Current Phrase: <span className="font-mono">{currentPhrase}</span>
+            Current Phrase:
+            <span className="font-mono">
+              {currentPhrase}
+              <span
+                className={`inline-block w-2 h-6 bg-gray-800 align-middle ${
+                  showCursor ? "opacity-100" : "opacity-0"
+                }`}
+              ></span>
+            </span>
           </p>
           <p className="text-xl mb-4">
             Time: <span className="font-mono">{formatTime(time)}</span>
