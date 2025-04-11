@@ -123,37 +123,18 @@ const App: React.FC = () => {
       if (newPhrase.toLowerCase() === targetPhrase.toLowerCase()) {
         setIsComplete(true);
         setIsRunning(false);
-        setShowNameInput(true);
+        // Add a small delay before showing the modal
+        setTimeout(() => {
+          setShowNameInput(true);
+        }, 100);
       }
     }
   };
 
   useEffect(() => {
     if (isComplete) {
-      // Only prevent game-related keys when game is complete
-      const handleKeyDown = (e: KeyboardEvent) => {
-        // Allow typing in the name input
-        if (e.target instanceof HTMLInputElement) return;
-
-        // Allow navigation keys
-        if (
-          [
-            "Tab",
-            "Enter",
-            "Escape",
-            "ArrowUp",
-            "ArrowDown",
-            "ArrowLeft",
-            "ArrowRight",
-          ].includes(e.key)
-        )
-          return;
-
-        // Prevent all other keys
-        e.preventDefault();
-      };
-      window.addEventListener("keydown", handleKeyDown);
-      return () => window.removeEventListener("keydown", handleKeyDown);
+      // Remove all game-related event listeners
+      return;
     }
 
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -176,27 +157,34 @@ const App: React.FC = () => {
         return;
       }
 
+      // Check if this key press would complete the game
+      const newPhrase =
+        event.key === "Backspace"
+          ? currentPhrase.slice(0, -1)
+          : event.key === " "
+          ? currentPhrase + " "
+          : currentPhrase + keyMap[key];
+
+      if (newPhrase.toLowerCase() === targetPhrase.toLowerCase()) {
+        setIsComplete(true);
+        setIsRunning(false);
+        setCurrentPhrase(newPhrase);
+        // Add a delay before showing the form
+        setTimeout(() => {
+          setShowNameInput(true);
+        }, 100);
+        return;
+      }
+
       // Handle backspace
       if (event.key === "Backspace") {
-        const newPhrase = currentPhrase.slice(0, -1);
-        setCurrentPhrase(newPhrase);
-        if (newPhrase.toLowerCase() === targetPhrase.toLowerCase()) {
-          setIsComplete(true);
-          setIsRunning(false);
-          setShowNameInput(true);
-        }
+        setCurrentPhrase(currentPhrase.slice(0, -1));
         return;
       }
 
       // Handle space
       if (event.key === " ") {
-        const newPhrase = currentPhrase + " ";
-        setCurrentPhrase(newPhrase);
-        if (newPhrase.toLowerCase() === targetPhrase.toLowerCase()) {
-          setIsComplete(true);
-          setIsRunning(false);
-          setShowNameInput(true);
-        }
+        setCurrentPhrase(currentPhrase + " ");
         return;
       }
 
@@ -214,11 +202,6 @@ const App: React.FC = () => {
             ? keyMap[key].toUpperCase()
             : currentPhrase + keyMap[key];
         setCurrentPhrase(newPhrase);
-        if (newPhrase.toLowerCase() === targetPhrase.toLowerCase()) {
-          setIsComplete(true);
-          setIsRunning(false);
-          setShowNameInput(true);
-        }
       }
     };
 
