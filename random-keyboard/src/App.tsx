@@ -185,9 +185,12 @@ const App: React.FC = () => {
               ></span>
             </div>
           </div>
-          <p className="text-xl mb-4">
-            Time: <span className="font-mono">{formatTime(time)}</span>
-          </p>
+          <div className="mb-4">
+            <p className="text-xl mb-2">Time:</p>
+            <div className="font-mono text-5xl font-bold text-blue-600 bg-gray-50 p-6 rounded-lg text-center shadow-inner border-2 border-blue-100">
+              <span className="tracking-wider">{formatTime(time)}</span>
+            </div>
+          </div>
 
           {!hasStarted ? (
             <button
