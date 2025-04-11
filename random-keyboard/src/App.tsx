@@ -47,6 +47,18 @@ const App: React.FC = () => {
     const handleKeyPress = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase();
 
+      // Handle backspace
+      if (event.key === "Backspace") {
+        setCurrentPhrase((prev) => prev.slice(0, -1));
+        return;
+      }
+
+      // Handle space
+      if (event.key === " ") {
+        setCurrentPhrase((prev) => prev + " ");
+        return;
+      }
+
       // Start the game on first key press
       if (!hasStarted && keyMap[key]) {
         setHasStarted(true);
