@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import VirtualKeyboard from "./components/VirtualKeyboard";
 import PlusTenAnimation from "./components/PlusTenAnimation";
 import Leaderboard, { Score } from "./components/Leaderboard";
+import GameDisplay from "./components/GameDisplay";
+import ScoreModal from "./components/ScoreModal";
 
 // AZERTY keyboard layout (first row)
 const AZERTY_LAYOUT = [
@@ -266,12 +267,6 @@ const App: React.FC = () => {
     }
   };
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
   useEffect(() => {
     // Load scores from localStorage
     const savedScores = localStorage.getItem("keyboardScores");
@@ -312,191 +307,39 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-amber-50 p-8 font-serif">
       <div className="max-w-6xl mx-auto flex gap-8 relative z-10">
-        <div className="flex-1">
-          <h1 className="text-4xl font-bold text-center mb-8 text-amber-900">
-            Défi Clavier Aléatoire
-          </h1>
-
-          <div className="bg-amber-50 p-6 border-4 border-amber-800 mb-6 shadow-lg rounded-lg">
-            <div className="mb-4">
-              <p className="text-xl mb-2 text-amber-900 font-bold">
-                Phrase à taper :
-              </p>
-              <div className="text-xl tracking-wider bg-amber-50 p-4 border-2 border-amber-700 rounded-lg">
-                {targetPhrase}
-              </div>
-            </div>
-            <div className="mb-4">
-              <p className="text-xl mb-2 text-amber-900 font-bold">
-                Phrase actuelle :
-              </p>
-              <div className="text-xl tracking-wider bg-amber-50 p-4 border-2 border-amber-700 rounded-lg">
-                {currentPhrase}
-                <span
-                  className={`inline-block w-2 h-6 bg-amber-900 align-middle ${
-                    showCursor ? "opacity-100" : "opacity-0"
-                  }`}
-                ></span>
-              </div>
-            </div>
-            <div className="mb-4">
-              <p className="text-xl mb-2 text-amber-900 font-bold">Temps :</p>
-              <div
-                ref={timerRef}
-                className="text-5xl font-bold text-amber-900 bg-amber-50 p-6 text-center border-4 border-amber-800 rounded-lg"
-              >
-                <span className="tracking-wider">{formatTime(time)}</span>
-              </div>
-            </div>
-
-            {!hasStarted ? (
-              <button
-                onClick={handleStart}
-                className="w-full mb-4 px-6 py-3 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors font-bold rounded-lg"
-              >
-                Démarrer le Défi
-              </button>
-            ) : !isComplete ? (
-              <button
-                onClick={handleShowKeyboard}
-                className={`w-full mb-4 px-6 py-3 border-2 transition-colors font-bold rounded-lg ${
-                  isKeyboardVisible
-                    ? "bg-amber-200 text-amber-600 cursor-not-allowed border-amber-400"
-                    : "bg-amber-800 text-amber-50 hover:bg-amber-900 border-amber-900"
-                }`}
-                disabled={isKeyboardVisible}
-              >
-                Afficher le Clavier (+10s de pénalité)
-              </button>
-            ) : null}
-
-            {isComplete && !showNameInput && (
-              <button
-                onClick={handleRestart}
-                className="w-full mt-4 px-6 py-3 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors font-bold rounded-lg"
-              >
-                Nouveau Défi
-              </button>
-            )}
-          </div>
-
-          <VirtualKeyboard
-            onKeyPress={handleKeyPress}
-            isVisible={isKeyboardVisible}
-            shuffledKeys={shuffledKeys}
-            hasStarted={hasStarted}
-          />
-        </div>
+        <GameDisplay
+          targetPhrase={targetPhrase}
+          currentPhrase={currentPhrase}
+          showCursor={showCursor}
+          time={time}
+          timerRef={timerRef}
+          isKeyboardVisible={isKeyboardVisible}
+          shuffledKeys={shuffledKeys}
+          hasStarted={hasStarted}
+          showPlusTen={showPlusTen}
+          timerPosition={timerPosition}
+          handleKeyPress={handleKeyPress}
+          handleStart={handleStart}
+          handleShowKeyboard={handleShowKeyboard}
+          handleRestart={handleRestart}
+          isComplete={isComplete}
+        />
 
         <div className="w-80">
           <Leaderboard scores={scores} />
         </div>
       </div>
 
-      {showNameInput && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="modal-title"
-        >
-          <div className="bg-amber-50 p-6 rounded-lg max-w-md w-full">
-            <div className="text-center">
-              <h2
-                id="modal-title"
-                className="text-3xl font-bold text-amber-900 mb-6"
-              >
-                {scores.length === 0 ||
-                time < Math.min(...scores.map((s) => s.time / 1000)) ? (
-                  <>
-                    <div className="relative">
-                      <div className="animate-spin-slow text-6xl mb-4">🏆</div>
-                      <div className="absolute -top-2 -right-2 animate-ping text-2xl">
-                        ✨
-                      </div>
-                      <div
-                        className="absolute -bottom-2 -left-2 animate-ping text-2xl"
-                        style={{ animationDelay: "0.5s" }}
-                      >
-                        ✨
-                      </div>
-                      <div
-                        className="absolute -top-2 -left-2 animate-ping text-2xl"
-                        style={{ animationDelay: "1s" }}
-                      >
-                        ✨
-                      </div>
-                      <div
-                        className="absolute -bottom-2 -right-2 animate-ping text-2xl"
-                        style={{ animationDelay: "1.5s" }}
-                      >
-                        ✨
-                      </div>
-                    </div>
-                    <div className="animate-bounce text-4xl mt-2">
-                      Nouveau Record !
-                    </div>
-                  </>
-                ) : (
-                  "Félicitations ! 🎉"
-                )}
-              </h2>
-              <div className="mb-8">
-                <p className="text-amber-700 mb-2 text-xl">Votre temps :</p>
-                <div className="text-7xl font-bold text-amber-800 mb-4">
-                  {formatTime(time)}
-                </div>
-                {scores.length === 0 ||
-                time < Math.min(...scores.map((s) => s.time / 1000)) ? (
-                  <p className="text-amber-600 animate-pulse text-xl">
-                    Vous êtes un sorcier du clavier ! 🧙‍♂️
-                  </p>
-                ) : (
-                  <p className="text-amber-600 text-xl">Bien joué !</p>
-                )}
-              </div>
-            </div>
-            <form onSubmit={handleNameSubmit} className="space-y-6">
-              <div className="text-center">
-                <label
-                  htmlFor="playerName"
-                  className="block text-amber-900 font-bold mb-2 text-xl"
-                  id="name-label"
-                >
-                  Votre Nom
-                </label>
-                <input
-                  type="text"
-                  id="playerName"
-                  value={playerName}
-                  onChange={(e) => setPlayerName(e.target.value)}
-                  className="w-full max-w-md mx-auto p-3 border-2 border-amber-700 rounded-lg bg-amber-50 text-center text-xl"
-                  placeholder="Entrez votre nom"
-                  required
-                  aria-required="true"
-                  aria-labelledby="name-label"
-                  autoFocus
-                />
-              </div>
-              <div className="flex justify-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => setShowNameInput(false)}
-                  className="px-6 py-2 border-2 border-amber-700 text-amber-900 hover:bg-amber-100 transition-colors text-lg rounded-lg"
-                >
-                  Annuler
-                </button>
-                <button
-                  type="submit"
-                  className="px-6 py-2 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors text-lg rounded-lg"
-                >
-                  Enregistrer
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <ScoreModal
+        time={time}
+        scores={scores}
+        playerName={playerName}
+        setPlayerName={setPlayerName}
+        showNameInput={showNameInput}
+        setShowNameInput={setShowNameInput}
+        handleNameSubmit={handleNameSubmit}
+        handleRestart={handleRestart}
+      />
 
       {showPlusTen && (
         <PlusTenAnimation
