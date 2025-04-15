@@ -2,6 +2,8 @@ import React from "react";
 import VirtualKeyboard from "./VirtualKeyboard";
 import PlusTenAnimation from "./PlusTenAnimation";
 import { useCursorBlink } from "../hooks/useCursorBlink";
+import { formatTime } from "../utils/time";
+
 interface GameDisplayProps {
   targetPhrase: string;
   currentPhrase: string;
@@ -35,12 +37,6 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
   handleRestart,
   isComplete,
 }) => {
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
   const showCursor = useCursorBlink();
 
   return (

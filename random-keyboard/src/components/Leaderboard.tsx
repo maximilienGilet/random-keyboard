@@ -1,4 +1,5 @@
 import React from "react";
+import { formatTime } from "../utils/time";
 
 export interface Score {
   name: string;
@@ -11,15 +12,6 @@ interface LeaderboardProps {
 }
 
 const Leaderboard: React.FC<LeaderboardProps> = ({ scores }) => {
-  const formatTime = (milliseconds: number) => {
-    const minutes = Math.floor(milliseconds / 60000);
-    const seconds = Math.floor((milliseconds % 60000) / 1000);
-    const ms = Math.floor((milliseconds % 1000) / 10);
-    return `${minutes}:${seconds.toString().padStart(2, "0")}.${ms
-      .toString()
-      .padStart(2, "0")}`;
-  };
-
   return (
     <div className="bg-amber-50 p-4 border-4 border-amber-800 rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold text-amber-900 mb-4">🏆 Scores</h2>
@@ -34,7 +26,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ scores }) => {
               <span className="text-amber-800">{score.name}</span>
             </div>
             <div className="text-amber-700 font-mono">
-              {formatTime(score.time)}
+              {formatTime(Math.floor(score.time / 1000))}
             </div>
           </div>
         ))}
