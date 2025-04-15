@@ -1,4 +1,5 @@
 import React from "react";
+import { formatTime } from "../utils/time";
 
 interface ScoreModalProps {
   time: number;
@@ -8,7 +9,6 @@ interface ScoreModalProps {
   showNameInput: boolean;
   setShowNameInput: (show: boolean) => void;
   handleNameSubmit: (e: React.FormEvent) => void;
-  handleRestart: () => void;
 }
 
 const ScoreModal: React.FC<ScoreModalProps> = ({
@@ -19,14 +19,7 @@ const ScoreModal: React.FC<ScoreModalProps> = ({
   showNameInput,
   setShowNameInput,
   handleNameSubmit,
-  handleRestart,
 }) => {
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
   if (!showNameInput) return null;
 
   return (

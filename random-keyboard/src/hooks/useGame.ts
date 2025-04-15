@@ -178,6 +178,7 @@ export const useGame = (targetPhrase: string, onComplete?: () => void) => {
   const handleRestart = () => {
     setCurrentPhrase("");
     resetTimer();
+    setShuffledKeys(shuffleKeys());
     setIsComplete(false);
     setHasStarted(false);
     setIsKeyboardVisible(true);

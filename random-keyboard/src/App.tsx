@@ -68,7 +68,6 @@ const App: React.FC = () => {
         showNameInput={showNameInput}
         setShowNameInput={setShowNameInput}
         handleNameSubmit={(e) => handleNameSubmit(e, time)}
-        handleRestart={handleRestart}
       />
 
       {showPlusTen && (
