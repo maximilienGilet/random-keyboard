@@ -317,13 +317,13 @@ const App: React.FC = () => {
       <div className="max-w-6xl mx-auto flex gap-8 relative z-10">
         <div className="flex-1">
           <h1 className="text-4xl font-bold text-center mb-8 text-amber-900">
-            Random Keyboard Challenge
+            Défi Clavier Aléatoire
           </h1>
 
           <div className="bg-amber-50 p-6 border-4 border-amber-800 mb-6 shadow-lg rounded-lg">
             <div className="mb-4">
               <p className="text-xl mb-2 text-amber-900 font-bold">
-                Target Phrase:
+                Phrase à taper :
               </p>
               <div className="text-xl tracking-wider bg-amber-50 p-4 border-2 border-amber-700 rounded-lg">
                 {targetPhrase}
@@ -331,7 +331,7 @@ const App: React.FC = () => {
             </div>
             <div className="mb-4">
               <p className="text-xl mb-2 text-amber-900 font-bold">
-                Current Phrase:
+                Phrase actuelle :
               </p>
               <div className="text-xl tracking-wider bg-amber-50 p-4 border-2 border-amber-700 rounded-lg">
                 {currentPhrase}
@@ -343,7 +343,7 @@ const App: React.FC = () => {
               </div>
             </div>
             <div className="mb-4">
-              <p className="text-xl mb-2 text-amber-900 font-bold">Time:</p>
+              <p className="text-xl mb-2 text-amber-900 font-bold">Temps :</p>
               <div
                 ref={timerRef}
                 className="text-5xl font-bold text-amber-900 bg-amber-50 p-6 text-center border-4 border-amber-800 rounded-lg"
@@ -357,7 +357,7 @@ const App: React.FC = () => {
                 onClick={handleStart}
                 className="w-full mb-4 px-6 py-3 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors font-bold rounded-lg"
               >
-                Start Challenge
+                Démarrer le Défi
               </button>
             ) : !isComplete ? (
               <button
@@ -369,7 +369,7 @@ const App: React.FC = () => {
                 }`}
                 disabled={isKeyboardVisible}
               >
-                Show Keyboard (+10s penalty)
+                Afficher le Clavier (+10s de pénalité)
               </button>
             ) : null}
 
@@ -378,7 +378,7 @@ const App: React.FC = () => {
                 onClick={handleRestart}
                 className="w-full mt-4 px-6 py-3 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors font-bold rounded-lg"
               >
-                Start New Challenge
+                Nouveau Défi
               </button>
             )}
           </div>
@@ -437,25 +437,25 @@ const App: React.FC = () => {
                       </div>
                     </div>
                     <div className="animate-bounce text-4xl mt-2">
-                      New High Score!
+                      Nouveau Record !
                     </div>
                   </>
                 ) : (
-                  "Congratulations! 🎉"
+                  "Félicitations ! 🎉"
                 )}
               </h2>
               <div className="mb-8">
-                <p className="text-amber-700 mb-2 text-xl">Your time:</p>
+                <p className="text-amber-700 mb-2 text-xl">Votre temps :</p>
                 <div className="text-7xl font-bold text-amber-800 mb-4">
                   {formatTime(time)}
                 </div>
                 {scores.length === 0 ||
                 time < Math.min(...scores.map((s) => s.time / 1000)) ? (
                   <p className="text-amber-600 animate-pulse text-xl">
-                    You're the fastest! ⚡
+                    Vous êtes le plus rapide ! ⚡
                   </p>
                 ) : (
-                  <p className="text-amber-600 text-xl">Great job!</p>
+                  <p className="text-amber-600 text-xl">Bien joué !</p>
                 )}
               </div>
             </div>
@@ -466,7 +466,7 @@ const App: React.FC = () => {
                   className="block text-amber-900 font-bold mb-2 text-xl"
                   id="name-label"
                 >
-                  Your Name
+                  Votre Nom
                 </label>
                 <input
                   type="text"
@@ -474,7 +474,7 @@ const App: React.FC = () => {
                   value={playerName}
                   onChange={(e) => setPlayerName(e.target.value)}
                   className="w-full max-w-md mx-auto p-3 border-2 border-amber-700 rounded-lg bg-amber-50 text-center text-xl"
-                  placeholder="Enter your name"
+                  placeholder="Entrez votre nom"
                   required
                   aria-required="true"
                   aria-labelledby="name-label"
@@ -487,13 +487,13 @@ const App: React.FC = () => {
                   onClick={() => setShowNameInput(false)}
                   className="px-6 py-2 border-2 border-amber-700 text-amber-900 hover:bg-amber-100 transition-colors text-lg rounded-lg"
                 >
-                  Cancel
+                  Annuler
                 </button>
                 <button
                   type="submit"
                   className="px-6 py-2 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors text-lg rounded-lg"
                 >
-                  Save Score
+                  Enregistrer
                 </button>
               </div>
             </form>
