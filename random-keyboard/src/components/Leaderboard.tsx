@@ -22,7 +22,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ scores }) => {
 
   return (
     <div className="bg-amber-50 p-4 border-4 border-amber-800 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-amber-900 mb-4">Scores</h2>
+      <h2 className="text-2xl font-bold text-amber-900 mb-4">🏆 Scores</h2>
       <div className="space-y-2">
         {scores.map((score, index) => (
           <div

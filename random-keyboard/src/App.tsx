@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import VirtualKeyboard from "./components/VirtualKeyboard";
 import PlusTenAnimation from "./components/PlusTenAnimation";
 import Leaderboard, { Score } from "./components/Leaderboard";
@@ -48,7 +48,7 @@ const KONAMI_CODE = [
 
 const App: React.FC = () => {
   const [targetPhrase] = useState(
-    "The quick brown fox jumps over the lazy dog"
+    "Portez ce vieux whisky au juge blond qui fume"
   );
   const [currentPhrase, setCurrentPhrase] = useState("");
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(true);
@@ -63,7 +63,6 @@ const App: React.FC = () => {
   const [timerPosition, setTimerPosition] = useState({ x: 0, y: 0 });
   const [konamiSequence, setKonamiSequence] = useState<string[]>([]);
   const [isComplete, setIsComplete] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(true);
   const [playerName, setPlayerName] = useState("");
   const [scores, setScores] = useState<Score[]>([]);
   const [showNameInput, setShowNameInput] = useState(false);
@@ -297,7 +296,6 @@ const App: React.FC = () => {
       setScores(updatedScores);
       localStorage.setItem("keyboardScores", JSON.stringify(updatedScores));
       setShowNameInput(false);
-      setShowConfetti(false); // Stop confetti after saving score
     }
   };
 
@@ -305,7 +303,6 @@ const App: React.FC = () => {
     setCurrentPhrase("");
     setTime(0);
     setIsComplete(false);
-    setShowConfetti(false);
     setHasStarted(false);
     setIsKeyboardVisible(true);
     setPlayerName("");
@@ -452,7 +449,7 @@ const App: React.FC = () => {
                 {scores.length === 0 ||
                 time < Math.min(...scores.map((s) => s.time / 1000)) ? (
                   <p className="text-amber-600 animate-pulse text-xl">
-                    Vous êtes le plus rapide ! ⚡
+                    Vous êtes un sorcier du clavier ! 🧙‍♂️
                   </p>
                 ) : (
                   <p className="text-amber-600 text-xl">Bien joué !</p>
