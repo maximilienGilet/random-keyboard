@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { AZERTY_LAYOUT } from "../const/keyboard";
 
 interface VirtualKeyboardProps {
   onKeyPress: (key: string) => void;
@@ -6,35 +7,6 @@ interface VirtualKeyboardProps {
   shuffledKeys: string[];
   hasStarted: boolean;
 }
-
-const AZERTY_LAYOUT = [
-  "a",
-  "z",
-  "e",
-  "r",
-  "t",
-  "y",
-  "u",
-  "i",
-  "o",
-  "p",
-  "q",
-  "s",
-  "d",
-  "f",
-  "g",
-  "h",
-  "j",
-  "k",
-  "l",
-  "m",
-  "w",
-  "x",
-  "c",
-  "v",
-  "b",
-  "n",
-];
 
 const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
   onKeyPress,
