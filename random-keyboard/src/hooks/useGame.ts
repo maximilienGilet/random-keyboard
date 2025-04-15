@@ -1,48 +1,8 @@
 import { useState, useEffect, useRef } from "react";
+import { AZERTY_LAYOUT } from "../const/keyboard";
+import { KONAMI_CODE } from "../const/game";
 
-const AZERTY_LAYOUT = [
-  "a",
-  "z",
-  "e",
-  "r",
-  "t",
-  "y",
-  "u",
-  "i",
-  "o",
-  "p",
-  "q",
-  "s",
-  "d",
-  "f",
-  "g",
-  "h",
-  "j",
-  "k",
-  "l",
-  "m",
-  "w",
-  "x",
-  "c",
-  "v",
-  "b",
-  "n",
-];
-
-const KONAMI_CODE = [
-  "ArrowUp",
-  "ArrowUp",
-  "ArrowDown",
-  "ArrowDown",
-  "ArrowLeft",
-  "ArrowRight",
-  "ArrowLeft",
-  "ArrowRight",
-  "b",
-  "a",
-];
-
-export const useGame = (targetPhrase: string) => {
+export const useGame = (targetPhrase: string, onComplete?: () => void) => {
   const [currentPhrase, setCurrentPhrase] = useState("");
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(true);
   const [time, setTime] = useState(0);
@@ -87,6 +47,80 @@ export const useGame = (targetPhrase: string) => {
     setKeyMap(newKeyMap);
   }, []);
 
+  // Keyboard event handler
+  useEffect(() => {
+    if (isComplete) return;
+
+    const handleKeyPress = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
+
+      // Check for Konami code
+      const newSequence = [...konamiSequence, event.key];
+      setKonamiSequence(newSequence.slice(-KONAMI_CODE.length));
+
+      if (newSequence.join(",") === KONAMI_CODE.join(",")) {
+        // Revert to standard AZERTY mapping
+        const standardKeyMap: Record<string, string> = {};
+        AZERTY_LAYOUT.forEach((key, index) => {
+          standardKeyMap[key] = key;
+        });
+        setKeyMap(standardKeyMap);
+        setShuffledKeys(AZERTY_LAYOUT);
+        setInitialShuffledKeys(AZERTY_LAYOUT);
+        setKonamiSequence([]);
+        return;
+      }
+
+      // Handle backspace
+      if (event.key === "Backspace") {
+        setCurrentPhrase(currentPhrase.slice(0, -1));
+        return;
+      }
+
+      // Handle space
+      if (event.key === " ") {
+        setCurrentPhrase(currentPhrase + " ");
+        return;
+      }
+
+      // Start the game on first key press if not started
+      if (!hasStarted && keyMap[key]) {
+        handleStart();
+        setCurrentPhrase(keyMap[key].toUpperCase());
+        return;
+      }
+
+      // Continue the game if already started
+      if (hasStarted && keyMap[key]) {
+        const newPhrase =
+          currentPhrase.length === 0
+            ? keyMap[key].toUpperCase()
+            : currentPhrase + keyMap[key];
+        setCurrentPhrase(newPhrase);
+
+        // Check for completion
+        if (newPhrase.toLowerCase() === targetPhrase.toLowerCase()) {
+          setIsComplete(true);
+          setIsRunning(false);
+          setTimeout(() => {
+            onComplete?.();
+          }, 100);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [
+    currentPhrase,
+    hasStarted,
+    keyMap,
+    konamiSequence,
+    isComplete,
+    targetPhrase,
+    onComplete,
+  ]);
+
   const handleKeyPress = (key: string) => {
     if (isComplete) return;
 
@@ -108,6 +142,9 @@ export const useGame = (targetPhrase: string) => {
       if (newPhrase.toLowerCase() === targetPhrase.toLowerCase()) {
         setIsComplete(true);
         setIsRunning(false);
+        setTimeout(() => {
+          onComplete?.();
+        }, 100);
       }
     }
   };

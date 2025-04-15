@@ -42,12 +42,7 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
   shuffledKeys,
   hasStarted,
 }) => {
-  const [keys, setKeys] = useState<string[]>([]);
   const [progress, setProgress] = useState(100);
-
-  useEffect(() => {
-    setKeys(shuffledKeys);
-  }, [shuffledKeys]);
 
   useEffect(() => {
     if (isVisible && hasStarted) {
