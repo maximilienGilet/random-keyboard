@@ -72,9 +72,9 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
       <div className="flex flex-col gap-2">
         {/* Progress bar */}
         {hasStarted && (
-          <div className="h-2 bg-amber-100 mb-4 overflow-hidden border-2 border-amber-700">
+          <div className="h-2 bg-amber-100 mb-4 overflow-hidden border-2 border-amber-700 rounded-lg">
             <div
-              className="h-full bg-amber-800 transition-all duration-100 ease-linear"
+              className="h-full bg-amber-800 transition-all duration-100 ease-linear rounded-lg"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -85,7 +85,7 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
           {shuffledKeys.slice(0, 10).map((key, index) => (
             <button
               key={index}
-              className="flex-1 max-w-[40px] bg-amber-50 text-amber-900 p-2 m-1 border-2 border-amber-700 hover:bg-amber-200 transition-colors"
+              className="flex-1 max-w-[40px] bg-amber-50 text-amber-900 p-2 m-1 border-2 border-amber-700 hover:bg-amber-200 transition-colors rounded-lg"
               onClick={() => onKeyPress(key)}
             >
               <div className="text-xs text-amber-600">
@@ -101,7 +101,7 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
           {shuffledKeys.slice(10, 20).map((key, index) => (
             <button
               key={index + 10}
-              className="flex-1 max-w-[40px] bg-amber-50 text-amber-900 p-2 m-1 border-2 border-amber-700 hover:bg-amber-200 transition-colors"
+              className="flex-1 max-w-[40px] bg-amber-50 text-amber-900 p-2 m-1 border-2 border-amber-700 hover:bg-amber-200 transition-colors rounded-lg"
               onClick={() => onKeyPress(key)}
             >
               <div className="text-xs text-amber-600">
@@ -117,7 +117,7 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
           {shuffledKeys.slice(20).map((key, index) => (
             <button
               key={index + 20}
-              className="flex-1 max-w-[40px] bg-amber-50 text-amber-900 p-2 m-1 border-2 border-amber-700 hover:bg-amber-200 transition-colors"
+              className="flex-1 max-w-[40px] bg-amber-50 text-amber-900 p-2 m-1 border-2 border-amber-700 hover:bg-amber-200 transition-colors rounded-lg"
               onClick={() => onKeyPress(key)}
             >
               <div className="text-xs text-amber-600">

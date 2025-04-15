@@ -320,12 +320,12 @@ const App: React.FC = () => {
             Random Keyboard Challenge
           </h1>
 
-          <div className="bg-amber-50 p-6 border-4 border-amber-800 mb-6 shadow-lg">
+          <div className="bg-amber-50 p-6 border-4 border-amber-800 mb-6 shadow-lg rounded-lg">
             <div className="mb-4">
               <p className="text-xl mb-2 text-amber-900 font-bold">
                 Target Phrase:
               </p>
-              <div className="text-xl tracking-wider bg-amber-50 p-4 border-2 border-amber-700">
+              <div className="text-xl tracking-wider bg-amber-50 p-4 border-2 border-amber-700 rounded-lg">
                 {targetPhrase}
               </div>
             </div>
@@ -333,7 +333,7 @@ const App: React.FC = () => {
               <p className="text-xl mb-2 text-amber-900 font-bold">
                 Current Phrase:
               </p>
-              <div className="text-xl tracking-wider bg-amber-50 p-4 border-2 border-amber-700">
+              <div className="text-xl tracking-wider bg-amber-50 p-4 border-2 border-amber-700 rounded-lg">
                 {currentPhrase}
                 <span
                   className={`inline-block w-2 h-6 bg-amber-900 align-middle ${
@@ -346,7 +346,7 @@ const App: React.FC = () => {
               <p className="text-xl mb-2 text-amber-900 font-bold">Time:</p>
               <div
                 ref={timerRef}
-                className="text-5xl font-bold text-amber-900 bg-amber-50 p-6 text-center border-4 border-amber-800"
+                className="text-5xl font-bold text-amber-900 bg-amber-50 p-6 text-center border-4 border-amber-800 rounded-lg"
               >
                 <span className="tracking-wider">{formatTime(time)}</span>
               </div>
@@ -355,14 +355,14 @@ const App: React.FC = () => {
             {!hasStarted ? (
               <button
                 onClick={handleStart}
-                className="w-full mb-4 px-6 py-3 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors font-bold"
+                className="w-full mb-4 px-6 py-3 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors font-bold rounded-lg"
               >
                 Start Challenge
               </button>
             ) : !isComplete ? (
               <button
                 onClick={handleShowKeyboard}
-                className={`w-full mb-4 px-6 py-3 border-2 transition-colors font-bold ${
+                className={`w-full mb-4 px-6 py-3 border-2 transition-colors font-bold rounded-lg ${
                   isKeyboardVisible
                     ? "bg-amber-200 text-amber-600 cursor-not-allowed border-amber-400"
                     : "bg-amber-800 text-amber-50 hover:bg-amber-900 border-amber-900"
@@ -376,7 +376,7 @@ const App: React.FC = () => {
             {isComplete && !showNameInput && (
               <button
                 onClick={handleRestart}
-                className="w-full mt-4 px-6 py-3 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors font-bold"
+                className="w-full mt-4 px-6 py-3 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors font-bold rounded-lg"
               >
                 Start New Challenge
               </button>
@@ -398,12 +398,12 @@ const App: React.FC = () => {
 
       {showNameInput && (
         <div
-          className="modal-overlay"
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-title"
         >
-          <div className="modal-content">
+          <div className="bg-amber-50 p-6 rounded-lg max-w-md w-full">
             <div className="text-center">
               <h2
                 id="modal-title"
@@ -473,7 +473,7 @@ const App: React.FC = () => {
                   id="playerName"
                   value={playerName}
                   onChange={(e) => setPlayerName(e.target.value)}
-                  className="w-full max-w-md mx-auto p-3 border-2 border-amber-700 rounded bg-amber-50 text-center text-xl"
+                  className="w-full max-w-md mx-auto p-3 border-2 border-amber-700 rounded-lg bg-amber-50 text-center text-xl"
                   placeholder="Enter your name"
                   required
                   aria-required="true"
@@ -485,13 +485,13 @@ const App: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowNameInput(false)}
-                  className="px-6 py-2 border-2 border-amber-700 text-amber-900 hover:bg-amber-100 transition-colors text-lg"
+                  className="px-6 py-2 border-2 border-amber-700 text-amber-900 hover:bg-amber-100 transition-colors text-lg rounded-lg"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors text-lg"
+                  className="px-6 py-2 bg-amber-800 text-amber-50 border-2 border-amber-900 hover:bg-amber-900 transition-colors text-lg rounded-lg"
                 >
                   Save Score
                 </button>

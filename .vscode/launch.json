@@ -4,21 +4,11 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-  {
-    "name": "Attach to Chrome",
-    "port": 9222,
-    "request": "attach",
-    "type": "chrome",
-    "webRoot": "${workspaceFolder}"
-  },
     {
-      "type": "node",
+      "command": "npm start",
+      "name": "Run npm start",
       "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "program": "${workspaceFolder}/random-keyboard/tailwind.config.js"
-    }
+      "type": "node-terminal"
+    },
   ]
 }
