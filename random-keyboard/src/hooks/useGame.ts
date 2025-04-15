@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { AZERTY_LAYOUT } from "../const/keyboard";
 import { KONAMI_CODE } from "../const/game";
 import { useCursorBlink } from "./useCursorBlink";
+import { useTimer } from "./useTimer";
 
 export const useGame = (targetPhrase: string, onComplete?: () => void) => {
   const [currentPhrase, setCurrentPhrase] = useState("");
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(true);
-  const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [shuffledKeys, setShuffledKeys] = useState<string[]>([]);
   const [hasStarted, setHasStarted] = useState(false);
@@ -18,6 +18,7 @@ export const useGame = (targetPhrase: string, onComplete?: () => void) => {
   const [isComplete, setIsComplete] = useState(false);
   const timerRef = useRef<HTMLDivElement>(null);
   const showCursor = useCursorBlink();
+  const { time, reset: resetTimer, addTime } = useTimer(isRunning);
 
   const shuffleKeys = () => {
     const keys = [...AZERTY_LAYOUT];
@@ -146,7 +147,7 @@ export const useGame = (targetPhrase: string, onComplete?: () => void) => {
     setHasStarted(true);
     setIsKeyboardVisible(false);
     setIsRunning(true);
-    setTime(0);
+    resetTimer();
   };
 
   const handleShowKeyboard = () => {
@@ -168,7 +169,7 @@ export const useGame = (targetPhrase: string, onComplete?: () => void) => {
       });
       setKeyMap(newKeyMap);
 
-      setTime((prev) => prev + 10);
+      addTime(10);
       setTimeout(() => {
         setIsKeyboardVisible(false);
         setShowPlusTen(false);
@@ -178,21 +179,11 @@ export const useGame = (targetPhrase: string, onComplete?: () => void) => {
 
   const handleRestart = () => {
     setCurrentPhrase("");
-    setTime(0);
+    resetTimer();
     setIsComplete(false);
     setHasStarted(false);
     setIsKeyboardVisible(true);
   };
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isRunning) {
-      interval = setInterval(() => {
-        setTime((prevTime) => prevTime + 1);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [isRunning]);
 
   return {
     currentPhrase,
