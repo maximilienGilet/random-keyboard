@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import PlusTenAnimation from "./components/PlusTenAnimation";
-import Leaderboard, { Score } from "./components/Leaderboard";
+import Leaderboard from "./components/Leaderboard";
 import GameDisplay from "./components/GameDisplay";
 import ScoreModal from "./components/ScoreModal";
 import { TARGET_PHRASE } from "./const/game";
 import { useGame } from "./hooks/useGame";
+import { useScores } from "./hooks/useScores";
 
 const App: React.FC = () => {
-  const [playerName, setPlayerName] = useState("");
-  const [scores, setScores] = useState<Score[]>([]);
-  const [showNameInput, setShowNameInput] = useState(false);
-
   const {
     currentPhrase,
     isKeyboardVisible,
@@ -30,32 +27,14 @@ const App: React.FC = () => {
     setShowNameInput(true);
   });
 
-  useEffect(() => {
-    // Load scores from localStorage
-    const savedScores = localStorage.getItem("keyboardScores");
-    if (savedScores) {
-      setScores(JSON.parse(savedScores));
-    }
-  }, []);
-
-  const handleNameSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (playerName.trim()) {
-      const newScore: Score = {
-        name: playerName.trim(),
-        time: time * 1000, // Convert to milliseconds
-        date: new Date().toISOString(),
-      };
-
-      const updatedScores = [...scores, newScore]
-        .sort((a, b) => a.time - b.time)
-        .slice(0, 10); // Keep only top 10 scores
-
-      setScores(updatedScores);
-      localStorage.setItem("keyboardScores", JSON.stringify(updatedScores));
-      setShowNameInput(false);
-    }
-  };
+  const {
+    playerName,
+    setPlayerName,
+    scores,
+    showNameInput,
+    setShowNameInput,
+    handleNameSubmit,
+  } = useScores();
 
   return (
     <div className="min-h-screen bg-amber-50 p-8 font-serif">
@@ -90,7 +69,7 @@ const App: React.FC = () => {
         setPlayerName={setPlayerName}
         showNameInput={showNameInput}
         setShowNameInput={setShowNameInput}
-        handleNameSubmit={handleNameSubmit}
+        handleNameSubmit={(e) => handleNameSubmit(e, time)}
         handleRestart={handleRestart}
       />
 

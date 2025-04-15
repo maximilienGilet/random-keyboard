@@ -13,7 +13,8 @@ export const useScores = () => {
     }
   }, []);
 
-  const handleNameSubmit = (time: number) => {
+  const handleNameSubmit = (e: React.FormEvent, time: number) => {
+    e.preventDefault();
     if (playerName.trim()) {
       const newScore: Score = {
         name: playerName.trim(),
