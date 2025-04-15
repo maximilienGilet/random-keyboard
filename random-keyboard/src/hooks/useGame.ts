@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { AZERTY_LAYOUT } from "../const/keyboard";
 import { KONAMI_CODE } from "../const/game";
-import { useCursorBlink } from "./useCursorBlink";
 import { useTimer } from "./useTimer";
 
 export const useGame = (targetPhrase: string, onComplete?: () => void) => {
@@ -17,7 +16,6 @@ export const useGame = (targetPhrase: string, onComplete?: () => void) => {
   const [konamiSequence, setKonamiSequence] = useState<string[]>([]);
   const [isComplete, setIsComplete] = useState(false);
   const timerRef = useRef<HTMLDivElement>(null);
-  const showCursor = useCursorBlink();
   const { time, reset: resetTimer, addTime } = useTimer(isRunning);
 
   const shuffleKeys = () => {
@@ -193,7 +191,6 @@ export const useGame = (targetPhrase: string, onComplete?: () => void) => {
     shuffledKeys,
     hasStarted,
     keyMap,
-    showCursor,
     showPlusTen,
     timerPosition,
     isComplete,

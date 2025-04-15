@@ -1,11 +1,10 @@
 import React from "react";
 import VirtualKeyboard from "./VirtualKeyboard";
 import PlusTenAnimation from "./PlusTenAnimation";
-
+import { useCursorBlink } from "../hooks/useCursorBlink";
 interface GameDisplayProps {
   targetPhrase: string;
   currentPhrase: string;
-  showCursor: boolean;
   time: number;
   timerRef: React.RefObject<HTMLDivElement>;
   isKeyboardVisible: boolean;
@@ -23,7 +22,6 @@ interface GameDisplayProps {
 const GameDisplay: React.FC<GameDisplayProps> = ({
   targetPhrase,
   currentPhrase,
-  showCursor,
   time,
   timerRef,
   isKeyboardVisible,
@@ -42,6 +40,8 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
+
+  const showCursor = useCursorBlink();
 
   return (
     <div className="flex-1">

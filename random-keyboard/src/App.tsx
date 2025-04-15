@@ -14,7 +14,6 @@ const App: React.FC = () => {
     time,
     shuffledKeys,
     hasStarted,
-    showCursor,
     showPlusTen,
     timerPosition,
     isComplete,
@@ -42,7 +41,6 @@ const App: React.FC = () => {
         <GameDisplay
           targetPhrase={TARGET_PHRASE}
           currentPhrase={currentPhrase}
-          showCursor={showCursor}
           time={time}
           timerRef={timerRef}
           isKeyboardVisible={isKeyboardVisible}
