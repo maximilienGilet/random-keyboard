@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { AZERTY_LAYOUT } from "../const/keyboard";
 import { KONAMI_CODE } from "../const/game";
+import { useCursorBlink } from "./useCursorBlink";
 
 export const useGame = (targetPhrase: string, onComplete?: () => void) => {
   const [currentPhrase, setCurrentPhrase] = useState("");
@@ -11,20 +12,12 @@ export const useGame = (targetPhrase: string, onComplete?: () => void) => {
   const [hasStarted, setHasStarted] = useState(false);
   const [keyMap, setKeyMap] = useState<Record<string, string>>({});
   const [initialShuffledKeys, setInitialShuffledKeys] = useState<string[]>([]);
-  const [showCursor, setShowCursor] = useState(true);
   const [showPlusTen, setShowPlusTen] = useState(false);
   const [timerPosition, setTimerPosition] = useState({ x: 0, y: 0 });
   const [konamiSequence, setKonamiSequence] = useState<string[]>([]);
   const [isComplete, setIsComplete] = useState(false);
   const timerRef = useRef<HTMLDivElement>(null);
-
-  // Blink cursor effect
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setShowCursor((prev) => !prev);
-    }, 500);
-    return () => clearInterval(interval);
-  }, []);
+  const showCursor = useCursorBlink();
 
   const shuffleKeys = () => {
     const keys = [...AZERTY_LAYOUT];
