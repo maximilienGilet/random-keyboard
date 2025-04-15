@@ -14,7 +14,6 @@ interface GameDisplayProps {
   hasStarted: boolean;
   showPlusTen: boolean;
   timerPosition: { x: number; y: number };
-  handleKeyPress: (key: string) => void;
   handleStart: () => void;
   handleShowKeyboard: () => void;
   handleRestart: () => void;
@@ -31,7 +30,6 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
   hasStarted,
   showPlusTen,
   timerPosition,
-  handleKeyPress,
   handleStart,
   handleShowKeyboard,
   handleRestart,
@@ -109,7 +107,6 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
       </div>
 
       <VirtualKeyboard
-        onKeyPress={handleKeyPress}
         isVisible={isKeyboardVisible}
         shuffledKeys={shuffledKeys}
         hasStarted={hasStarted}

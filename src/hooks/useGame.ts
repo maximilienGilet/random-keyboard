@@ -113,34 +113,6 @@ export const useGame = (targetPhrase: string, onComplete?: () => void) => {
     onComplete,
   ]);
 
-  const handleKeyPress = (key: string) => {
-    if (isComplete) return;
-
-    if (!hasStarted) {
-      setHasStarted(true);
-      setIsKeyboardVisible(false);
-      setIsRunning(true);
-      setCurrentPhrase(key.toUpperCase());
-    } else {
-      const newPhrase =
-        key === "Backspace"
-          ? currentPhrase.slice(0, -1)
-          : key === " "
-          ? currentPhrase + " "
-          : currentPhrase + key;
-
-      setCurrentPhrase(newPhrase);
-
-      if (newPhrase.toLowerCase() === targetPhrase.toLowerCase()) {
-        setIsComplete(true);
-        setIsRunning(false);
-        setTimeout(() => {
-          onComplete?.();
-        }, 100);
-      }
-    }
-  };
-
   const handleStart = () => {
     setHasStarted(true);
     setIsKeyboardVisible(false);
@@ -196,7 +168,6 @@ export const useGame = (targetPhrase: string, onComplete?: () => void) => {
     timerPosition,
     isComplete,
     timerRef,
-    handleKeyPress,
     handleStart,
     handleShowKeyboard,
     handleRestart,

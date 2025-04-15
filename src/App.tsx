@@ -18,7 +18,6 @@ const App: React.FC = () => {
     timerPosition,
     isComplete,
     timerRef,
-    handleKeyPress,
     handleStart,
     handleShowKeyboard,
     handleRestart,
@@ -48,7 +47,6 @@ const App: React.FC = () => {
           hasStarted={hasStarted}
           showPlusTen={showPlusTen}
           timerPosition={timerPosition}
-          handleKeyPress={handleKeyPress}
           handleStart={handleStart}
           handleShowKeyboard={handleShowKeyboard}
           handleRestart={handleRestart}
